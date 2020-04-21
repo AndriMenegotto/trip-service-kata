@@ -41,8 +41,10 @@ public class TripServiceTest {
     void should_return_empty_trip_list_when_users_are_not_friends() {
         loggedUser = LOGGED_USER;
 
-        User friend = new User();
-        friend.addFriend(ANOTHER_USER);
+        User friend = UserBuilder.user()
+            .withFriends(ANOTHER_USER)
+            .withTrips(TO_CHILE)
+            .build();
 
         List<Trip> trips = tripService.getTripsByUser(friend);
         assertEquals(trips.size(),0);
@@ -52,11 +54,10 @@ public class TripServiceTest {
     void should_return_trip_list_when_users_are_friends() {
         loggedUser = LOGGED_USER;
 
-        User friend = new User();
-        friend.addFriend(ANOTHER_USER);
-        friend.addFriend(loggedUser);
-        friend.addTrip(TO_CHILE);
-        friend.addTrip(TO_COLOMBIA);
+        User friend = UserBuilder.user()
+            .withFriends(ANOTHER_USER, loggedUser)
+            .withTrips(TO_CHILE, TO_COLOMBIA)
+            .build();
 
         List<Trip> trips = tripService.getTripsByUser(friend);
         assertEquals(trips.size(),2);
